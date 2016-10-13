@@ -10,8 +10,8 @@ mm_max_arc_error                             0.01             # The maximum erro
                                                               # coordinates robots ).
 
 # Arm solution configuration : Cartesian robot. Translates mm positions into stepper positions
-alpha_steps_per_mm                           43.6               # Steps per mm for alpha stepper
-beta_steps_per_mm                            43.6               # Steps per mm for beta stepper
+alpha_steps_per_mm                           45.369               # Steps per mm for alpha stepper
+beta_steps_per_mm                            45.369               # Steps per mm for beta stepper
 gamma_steps_per_mm                           1600             # Steps per mm for gamma stepper
 
 # Planner module configuration : Look-ahead and acceleration configuration
@@ -43,7 +43,7 @@ alpha_current                                1.5              # X stepper motor 
 alpha_max_rate                               30000.0          # mm/min
 
 beta_step_pin                                2.1o              # Pin for beta stepper step signal
-beta_dir_pin                                 0.11o!             # Pin for beta stepper direction
+beta_dir_pin                                 0.11o             # Pin for beta stepper direction
 beta_en_pin                                  0.10o!             # Pin for beta enable
 beta_current                                 1.5              # Y stepper motor current
 beta_max_rate                                30000.0          # mm/min
@@ -64,7 +64,7 @@ second_usb_serial_enable                     false            # This enables a s
 
 # Kill button (used to be called pause) maybe assigned to a different pin, set to the onboard pin by default
 kill_button_enable                           true             # set to true to enable a kill button
-kill_button_pin                              2.12             # kill button pin. default is same as pause button 2.12 (2.11 is another good choice)
+kill_button_pin                              2.11!^            # kill button pin. default is same as pause button 2.12 (2.11 is another good choice)
 
 #msd_disable                                 false            # disable the MSD (USB SDCARD) when set to true (needs special binary)
 #dfu_enable                                  false            # for linux developers, set to true to enable DFU
@@ -121,10 +121,10 @@ laser_module_enable                          true            # Whether to activa
                                                               # ignored if false.
 laser_module_pin                             2.3             # this pin will be PWMed to control the laser. Only P2.0 - P2.5, P1.18, P1.20, P1.21, P1.23, P1.24, P1.26, P3.25, P3.26
                                                               # can be used since laser requires hardware PWM
-laser_module_maximum_power                   0.8            # this is the maximum duty cycle that will be applied to the laser
-laser_module_minimum_power                   0.0             # This is a value just below the minimum duty cycle that keeps the laser
+laser_module_maximum_power                   1.0            # this is the maximum duty cycle that will be applied to the laser
+laser_module_minimum_power                   0.15             # This is a value just below the minimum duty cycle that keeps the laser
                                                               # active without actually burning.
-laser_module_default_power                   0.8             # This is the default laser power that will be used for cuts if a power has not been specified.  The value is a scale between
+laser_module_default_power                   1.0             # This is the default laser power that will be used for cuts if a power has not been specified.  The value is a scale between
                                                               # the maximum and minimum power levels specified above
 laser_module_pwm_period                      20              # this sets the pwm frequency as the period in microseconds
 
@@ -219,31 +219,35 @@ endstops_enable                              true             # the endstop modu
 alpha_min_endstop                            1.24^           # add a ! to invert if endstop is NO connected to ground
 alpha_max_endstop                            nc            # NOTE set to nc if this is not installed
 alpha_homing_direction                       home_to_min      # or set to home_to_max and set alpha_max
-alpha_min                                    0                # this gets loaded after homing when home_to_min is set
-alpha_max                                    200              # this gets loaded after homing when home_to_max is set
-beta_min_endstop                             1.26^            #
-beta_max_endstop                             nc            #
-beta_homing_direction                        home_to_min      #
-beta_min                                     0                #
-beta_max                                     200              #
+alpha_min                                    1                # this gets loaded after homing when home_to_min is set
+alpha_max                                    473
+alpha_soft_max                               473              # this gets loaded after homing when home_to_max is set
+
+beta_min_endstop                             nc            #
+beta_max_endstop                             1.26^            #
+beta_homing_direction                        home_to_max     #
+beta_min				     1
+beta_max				     288                #
+beta_soft_max                                288              #
+
 gamma_min_endstop                            nc            #
 gamma_max_endstop                            nc            #
 gamma_homing_direction                       home_to_min      #
 gamma_min                                    0                #
-gamma_max                                    200              #
+gamma_max                                    288              #
 
-alpha_max_travel                             900              # max travel in mm for alpha/X axis when homing
-beta_max_travel                              600              # max travel in mm for beta/Y axis when homing
+#alpha_max_travel                             473              # max travel in mm for alpha/X axis when homing
+#beta_max_travel                              288              # max travel in mm for beta/Y axis when homing
 #gamma_max_travel                             500              # max travel in mm for gamma/Z axis when homing
 
 # optional order in which axis will home, default is they all home at the same time,
 # if this is set it will force each axis to home one at a time in the specified order
 #homing_order                                 XYZ              # x axis followed by y then z last
-#move_to_origin_after_home                    false            # move XY to 0,0 after homing
+#move_to_origin_after_home                    true            # move XY to 0,0 after homing
 
 # optional enable limit switches, actions will stop if any enabled limit switch is triggered
-#alpha_limit_enable                          true            # set to true to enable X min and max limit switches
-#beta_limit_enable                           true            # set to true to enable Y min and max limit switches
+alpha_limit_enable                           true            # set to true to enable X min and max limit switches
+beta_limit_enable                            true            # set to true to enable Y min and max limit switches
 #gamma_limit_enable                          false            # set to true to enable Z min and max limit switches
 
 alpha_fast_homing_rate_mm_s                  50               # feedrates in mm/second
@@ -253,8 +257,8 @@ alpha_slow_homing_rate_mm_s                  25               # "
 beta_slow_homing_rate_mm_s                   25               # "
 gamma_slow_homing_rate_mm_s                  2                # "
 
-alpha_homing_retract_mm                      5                # distance in mm
-beta_homing_retract_mm                       5                # "
+alpha_homing_retract_mm                      1                # distance in mm
+beta_homing_retract_mm                       1               # "
 gamma_homing_retract_mm                      1                # "
 
 #endstop_debounce_count                       100              # uncomment if you get noise on your endstops, default is 100
@@ -291,7 +295,7 @@ panel.encoder_a_pin                         3.25!^            # encoder pin     
 panel.encoder_b_pin                         3.26!^            # encoder pin         ; GLCD EXP2 Pin 5
 panel.click_button_pin                      1.30!^            # click button        ; GLCD EXP1 Pin 2
 panel.buzz_pin                              1.31              # pin for buzzer      ; GLCD EXP1 Pin 1
-panel.back_button_pin                       2.11!^            # back button         ; GLCD EXP2 Pin 8
+#panel.back_button_pin                       2.11!^            # back button         ; GLCD EXP2 Pin 8
 
 panel.encoder_resolution                    4
 
@@ -319,13 +323,20 @@ panel.bed_temperature                        60                # temp to set bed
 ## Custom menus : Example of a custom menu entry, which will show up in the Custom entry.
 # NOTE _ gets converted to space in the menu and commands, | is used to separate multiple commands
 custom_menu.power_on.enable                true              #
-custom_menu.power_on.name                  Power_on          #
-custom_menu.power_on.command               M80               #
+custom_menu.power_on.name                  Laser_Probe          #
+custom_menu.power_on.command               G91|G1_X0.1_S1_F300|G90|M18|M999  #
 
 custom_menu.power_off.enable               true              #
-custom_menu.power_off.name                 Power_off         #
-custom_menu.power_off.command              M81               #
+custom_menu.power_off.name                 Motors_off        #
+custom_menu.power_off.command              M18               #
 
+custom_menu.power_off.enable               true              #
+custom_menu.power_off.name                 Motors_on         #
+custom_menu.power_off.command              M17               #
+
+custom_menu.power_off.enable               true              #
+custom_menu.power_off.name                 Reset_M999         #
+custom_menu.power_off.command              M999               #
 
 ## Network settings
 network.enable                               true             # enable the ethernet network services
